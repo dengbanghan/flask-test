@@ -8,12 +8,15 @@
 import jwt
 from datetime import datetime, timezone, timedelta
 from jwt import PyJWTError
+from tools.logger import Logger
 
 
 # 密钥（请确保在生产环境中使用安全的密钥）
 SECRET_KEY = 'your-secret-key'
 # 定义JWT的有效期（可选）
 EXPIRATION_DELTA = timedelta(days=1)
+log = Logger("debug")
+
 def generate_token(id, secret_key):
     # 定义载荷（Payload）
     payload = {
@@ -25,6 +28,7 @@ def generate_token(id, secret_key):
     }
     # 生成 JWT 令牌
     token = jwt.encode(payload, secret_key, algorithm='HS256')
+    log.info("生成JWT令牌成功\nToken：{}".format(token))
     return token
 
 def analysis_token(token, secret_key):
@@ -33,4 +37,4 @@ def analysis_token(token, secret_key):
         decoded_token = jwt.decode(token, secret_key, algorithms=['HS256'])
         return decoded_token
     except PyJWTError as e:
-        print(f"Error decoding JWT: {e}")
+        log.error(f"Error decoding JWT: {e}")
