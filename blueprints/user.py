@@ -11,6 +11,7 @@ from models.user import User
 from exts import db, app
 from tools.token import generate_token
 from tools.logger import Logger
+from tools.utils import jsonDumps
 
 bp = Blueprint('user', __name__, url_prefix="/user")
 log = Logger("debug")
@@ -43,6 +44,9 @@ def login():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
+
+    log.info("入参：\n{}".format(jsonDumps({"username": username, "password": password})))
+
     if not username or not password:
         return jsonify({'error': 'Username and password are required'}), 400
 
@@ -53,5 +57,4 @@ def login():
 
     # 生成token
     token = generate_token(user.id, app.config['SECRET_KEY'])
-    log.info("User login successfully")
     return jsonify({'token': token}), 200
