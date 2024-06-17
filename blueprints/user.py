@@ -10,8 +10,10 @@ from flask import Blueprint, request, jsonify
 from models.user import User
 from exts import db, app
 from tools.token import generate_token
+from tools.logger import Logger
 
 bp = Blueprint('user', __name__, url_prefix="/user")
+log = Logger("debug")
 
 @bp.route("/register", methods=["POST"])
 def register():
@@ -51,4 +53,5 @@ def login():
 
     # 生成token
     token = generate_token(user.id, app.config['SECRET_KEY'])
+    log.info("User login successfully")
     return jsonify({'token': token}), 200
