@@ -34,7 +34,3 @@ def analysis_token(token, secret_key):
         return decoded_token
     except PyJWTError as e:
         print(f"Error decoding JWT: {e}")
-
-token = generate_token(1, SECRET_KEY)
-print("打印token：{}".format(token))
-print("解析token：{}".format(analysis_token(token, SECRET_KEY)))
